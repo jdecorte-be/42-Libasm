@@ -1,31 +1,34 @@
-SRCS		=	ft_strlen.s
-OBJS		=	$(SRCS:.s=.o)
+NAME = libasm.a
 
-NA			=	nasm
-NA_FLAGS	=	-f macho64
-FLAGS 		=	-Wall 
-NAME		=	libasm.a
-TEST		=	test
+SRCS =	ft_strlen.s			\
+	# ft_strcpy.s			\
+	# ft_strcmp.s			\
+	# ft_strdup.s			\
+	# ft_write.s			\
+	# ft_read.s	
 
+CC = nasm -felf64
 
-%.o:			%.s
-				$(NA) $(NA_FLAGS) $<
+OBJS = ${SRCS:.s=.o}
 
-all:			$(NAME)
+${NAME}: ${OBJS}
+	ar rc ${NAME} ${OBJS}
 
-$(NAME):		$(OBJS)
-				ar rcs $(NAME) $(OBJS)
+all: ${NAME}
+
+.s.o:
+	${CC} -o $@ $?
+
+test:
+	gcc $(NAME) ${OBJS} main.c -o test
+	./test
+	rm -rf test
 
 clean:
-				rm -rf $(OBJS) $(BONUS_OBJS)
+	rm -rf ${OBJS}
 
-fclean:			clean
-				rm -rf $(NAME) $(BONUS) $(TEST) $(TEST_BONUS)
+fclean: clean
+	rm -rf $(NAME)
+	rm -rf a.out
 
-re:				fclean $(NAME)
-
-test:			$(NAME)
-				gcc $(FLAGS) -L. -lasm -o $(TEST) main.c
-				./$(TEST)
-
-.PHONY:			clean fclean re test bonus test_bonus
+re: fclean all

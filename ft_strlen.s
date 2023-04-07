@@ -1,7 +1,7 @@
-global _ft_strlen ;must be declared for be used with gcc
+global ft_strlen
 
-_ft_strlen:
-    mov rax, 0 ;rax = 0
+ft_strlen:
+    mov rax, 0 ;i = 0
     jmp loop ; go to loop
 
 loop:
